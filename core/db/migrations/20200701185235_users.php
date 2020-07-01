@@ -26,6 +26,8 @@ class Users extends Migration
                 $table->increments('id');
                 $table->string('username')->unique();
                 $table->string('password');
+                $table->string('fullname')->nullable();
+                $table->string('telegram')->nullable();
                 $table->integer('role_id')->unsigned()->nullable();
                 $table->boolean('active')->default(true);
                 $table->timestamps();

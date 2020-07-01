@@ -6,4 +6,5 @@ namespace App\Models;
 
 class User extends \Vesp\Models\User
 {
+    protected $fillable = ['fullname','telegram'];
 }

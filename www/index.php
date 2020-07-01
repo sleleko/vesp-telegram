@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\Web\Users;
 use Vesp\Helpers\Env;
 
 define('BASE_DIR', dirname(__DIR__) . '/');
@@ -11,6 +12,8 @@ Env::loadFile(BASE_DIR . 'core/.env');
 $app = DI\Bridge\Slim\Bridge::create();
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
+
+$app->any('/web/users[/{id:\d+}]', [Users::class, 'process']);
 
 try {
     $app->run();
