@@ -20,6 +20,7 @@ class Users extends AbstractSeed
         $user->role_id = 1;
         $user->username = 'admin';
         $user->password = 'admin';
+        $user->fullname = 'Superadmin';
         $user->save();
     }
 }

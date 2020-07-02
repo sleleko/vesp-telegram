@@ -27,6 +27,8 @@ class Users extends Migration
                 $table->string('username')->unique();
                 $table->string('password');
                 $table->string('fullname')->nullable();
+                $table->string('email')->nullable();
+                $table->char('phone', 12)->nullable();
                 $table->string('telegram')->nullable();
                 $table->integer('role_id')->unsigned()->nullable();
                 $table->boolean('active')->default(true);
@@ -38,10 +40,30 @@ class Users extends Migration
                     ->onDelete('set null');
             }
         );
+
+        $this->schema->create(
+            'user_tokens',
+            function (Blueprint $table) {
+                $table->string('token')->primary();
+                $table->integer('user_id')->unsigned();
+                $table->boolean('active')->default(true);
+                $table->string('ip', 16)->nullable();
+                $table->timestamp('valid_till')->nullable()->index();
+                $table->timestamps();
+
+                $table->index(['token', 'user_id', 'active']);
+
+                $table->foreign('user_id')
+                    ->references('id')->on('users')
+                    ->onUpdate('restrict')
+                    ->onDelete('cascade');
+            }
+        );
     }
 
     public function down(): void
     {
+        $this->schema->drop('user_tokens');
         $this->schema->drop('users');
         $this->schema->drop('user_roles');
     }
