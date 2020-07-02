@@ -62,14 +62,14 @@ class Users extends ModelController
      */
     protected function beforeCount($c)
     {
-        if ($query = trim($this->getProperty('query'))) {
-            $c->where(
-                function (Builder $q) use ($query) {
-                    $q->where('username', 'LIKE', "%$query%");
-                    $q->orWhere('fullname', 'LIKE', "%$query%");
-                }
-            );
-        }
+//        if ($query = trim($this->getProperty('query'))) {
+//            $c->where(
+//                function (Builder $q) use ($query) {
+//                    $q->where('username', 'LIKE', "%$query%");
+//                    $q->orWhere('fullname', 'LIKE', "%$query%");
+//                }
+//            );
+//        }
 
         return $c;
     }

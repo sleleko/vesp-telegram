@@ -47,9 +47,9 @@ class UserRoles extends ModelController
      */
     protected function beforeCount($c)
     {
-        if ($query = trim($this->getProperty('query'))) {
-            $c->where('title', 'LIKE', "%$query%");
-        }
+//        if ($query = trim($this->getProperty('query'))) {
+//            $c->where('title', 'LIKE', "%$query%");
+//        }
 
         return $c;
     }
