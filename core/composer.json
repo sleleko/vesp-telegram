@@ -6,7 +6,7 @@
     },
     "require": {
         "vesp/core": "^1.1",
-        "unreal4u/telegram-api": "^3.6",
-        "akrabat/ip-address-middleware": "^1.0"
+        "akrabat/ip-address-middleware": "^1.0",
+        "irazasyed/telegram-bot-sdk": "^3.1"
     }
 }

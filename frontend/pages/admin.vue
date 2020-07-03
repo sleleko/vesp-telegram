@@ -32,6 +32,7 @@
       if (this.$auth.hasScope('users') || this.$auth.hasScope('users/get')) {
         items.push({to: 'admin-users', title: 'Users'});
         items.push({to: 'admin-user-roles', title: 'User Roles'});
+        items.push({to: 'admin-bot-settings', title: 'Bot settings'});
       }
 
       return {

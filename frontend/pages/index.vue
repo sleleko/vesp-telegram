@@ -31,6 +31,10 @@
               <fa :icon="['fas', 'user-shield']" size="2x"/>
               <div class="mt-1">User roles</div>
             </nuxt-link>
+            <nuxt-link class="p-5 ml-md-2 mt-3 border" :to="{name: 'admin-bot-settings'}">
+              <fa :icon="['fas', 'cogs']" size="2x"/>
+              <div class="mt-1">Bot settings</div>
+            </nuxt-link>
           </template>
         </b-row>
       </div>
@@ -38,7 +42,7 @@
 </template>
 
 <script>
-  import {faCoins, faUserTie, faUsers, faUserShield, faUserSecret, faTasks} from '@fortawesome/free-solid-svg-icons'
+  import {faCoins, faUserTie, faUsers, faUserShield, faUserSecret, faTasks, faCogs} from '@fortawesome/free-solid-svg-icons'
   export default {
     auth: false,
     data() {
@@ -51,7 +55,7 @@
       }
     },
     created() {
-      this.$fa.add(faCoins, faUserTie, faUsers, faUserShield, faUserSecret, faTasks),
+      this.$fa.add(faCoins, faUserTie, faUsers, faUserShield, faUserSecret, faTasks, faCogs)
       this.redirect()
     },
     methods: {
