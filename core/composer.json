@@ -7,6 +7,7 @@
     "require": {
         "vesp/core": "^1.1",
         "akrabat/ip-address-middleware": "^1.0",
-        "irazasyed/telegram-bot-sdk": "^3.1"
+        "longman/telegram-bot": "^0.63.1",
+      "ext-json": "*"
     }
 }

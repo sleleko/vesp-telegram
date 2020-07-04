@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use App\Controllers\Web\Users;
+use App\Controllers\Admin\TelegramSetHook;
+use App\Controllers\Web\TelegramHook;
+use App\Controllers\Admin\TelegramUnSetHook;
 use Vesp\Helpers\Env;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -24,15 +27,28 @@ $app->group(
             function (RouteCollectorProxy $group) {
                 $group->any('/users', [App\Controllers\Admin\Users::class, 'process']);
                 $group->any('/user-roles', [App\Controllers\Admin\UserRoles::class, 'process']);
+                // Hook manage routes
+                $group->any('/telegram-set',[TelegramHook::class,'process']);
+                $group->any('/telegram-unset',[TelegramUnSetHook::class,'process']);
             }
         );
 
         $group->any('/security/login', [App\Controllers\Security\Login::class, 'process']);
         $group->any('/security/logout', [App\Controllers\Security\Logout::class, 'process']);
         $group->any('/user/profile', [App\Controllers\User\Profile::class, 'process']);
+
+        $group->group(
+            '/web',
+            function (RouteCollectorProxy $group) {
+//                this is demo method view all users, don't forget disable him on production
+//                $group->any('/users[/{id:\d+}]', [Users::class, 'process']);
+
+                $group->any('/telegram-hook',[TelegramSetHook::class,'process']);
+            }
+        );
+
     }
 );
-$app->any('/web/users[/{id:\d+}]', [Users::class, 'process']);
 
 try {
     $app->run();
