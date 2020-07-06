@@ -1,2 +1,2 @@
 # vesp-telegram
-Telegram bot based on VESP
+Telegram bot admin site based on VESP
