@@ -28,7 +28,7 @@ $app->group(
                 $group->any('/users', [App\Controllers\Admin\Users::class, 'process']);
                 $group->any('/user-roles', [App\Controllers\Admin\UserRoles::class, 'process']);
                 // Hook manage routes
-                $group->any('/telegram-set',[TelegramHook::class,'process']);
+                $group->any('/telegram-set',[TelegramSetHook::class,'process']);
                 $group->any('/telegram-unset',[TelegramUnSetHook::class,'process']);
             }
         );
@@ -43,7 +43,7 @@ $app->group(
 //                this is demo method view all users, don't forget disable him on production
 //                $group->any('/users[/{id:\d+}]', [Users::class, 'process']);
 
-                $group->any('/telegram-hook',[TelegramSetHook::class,'process']);
+                $group->any('/telegram-hook',[TelegramHook::class,'process']);
             }
         );
 
