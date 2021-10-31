@@ -1,17 +1,9 @@
 <?php
 
-declare(strict_types=1);
+require 'bootstrap.php';
 
-use Vesp\Helpers\Env;
 use Vesp\Services\Eloquent;
 use Vesp\Services\Migration;
-
-define('BASE_DIR', dirname(__DIR__) . '/');
-require BASE_DIR . 'core/vendor/autoload.php';
-Env::loadFile(BASE_DIR . 'core/.env');
-
-$eloquent = new Eloquent();
-$config = $eloquent->getConnection()->getConfig();
 
 return [
     'paths' => [
@@ -20,11 +12,11 @@ return [
     ],
     'migration_base_class' => Migration::class,
     'environments' => [
-        'default_migration_table' => $config['prefix'] . 'migrations',
+        'default_migration_table' => getenv('DB_PREFIX') . 'migrations',
         'default_environment' => 'dev',
         'dev' => [
-            'name' => $config['database'],
-            'connection' => $eloquent->getConnection()->getPdo(),
+            'name' => getenv('DB_DATABASE'),
+            'connection' => (new Eloquent())->getConnection()->getPdo(),
         ],
     ],
 ];

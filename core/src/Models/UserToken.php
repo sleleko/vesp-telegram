@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
 use Carbon\Carbon;
@@ -11,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property string $token
  * @property int $user_id
- * @property bool $active
+ * @property Carbon $valid_till
  * @property string $ip
- * @property string $valid_till
+ * @property bool $active
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -23,16 +21,17 @@ class UserToken extends Model
 {
     public $incrementing = false;
     protected $primaryKey = 'token';
-    protected $fillable = ['token', 'user_id', 'active', 'ip', 'valid_till'];
+    protected $guarded = ['created_at', 'updated_at'];
+    protected $dates = [
+        'valid_till',
+        'created_at',
+        'updated_at',
+    ];
     protected $casts = [
         'active' => 'boolean',
     ];
 
-
-    /**
-     * @return BelongsTo
-     */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

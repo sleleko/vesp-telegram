@@ -1,26 +1,36 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Models\User;
-use App\Models\UserRole;
 use Phinx\Seed\AbstractSeed;
 
 class Users extends AbstractSeed
 {
+    public function getDependencies(): array
+    {
+        return ['UserRoles'];
+    }
+
     public function run(): void
     {
-        $role = new UserRole();
-        $role->title = 'Admin';
-        $role->scope = ['users'];
-        $role->save();
+        $users = [
+            'admin' => [
+                'password' => 'admin',
+                'fullname' => 'Admin',
+                'role_id' => 1,
+            ],
+            'user' => [
+                'password' => 'user',
+                'fullname' => 'User',
+                'role_id' => 2,
+            ],
+        ];
 
-        $user = new User();
-        $user->id = $role->id;
-        $user->role_id = 1;
-        $user->username = 'admin';
-        $user->password = 'admin';
-        $user->fullname = 'Superadmin';
-        $user->save();
+        foreach ($users as $username => $data) {
+            if (!$user = User::query()->where('username', $username)->first()) {
+                $user = new User(['username' => $username]);
+            }
+            $user->fill($data);
+            $user->save();
+        }
     }
 }

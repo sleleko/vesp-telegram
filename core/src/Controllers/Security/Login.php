@@ -1,49 +1,50 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controllers\Security;
 
 use App\Models\UserToken;
+use Psr\Http\Message\ResponseInterface;
 use Vesp\Helpers\Jwt;
 
 class Login extends \Vesp\Controllers\Security\Login
 {
-    public function post()
+    public function post(): ResponseInterface
     {
-        // Invalidate old tokens
-        UserToken::query()
-            ->where('active', true)
-            ->where('valid_till', '<', date('Y-m-d H:i:s', time()))
-            ->update(['active' => false]);
-
         $response = parent::post();
-        if ($response->getStatusCode() === 200) {
-            $token = json_decode($response->getBody()->__toString())->token;
+        $code = $response->getStatusCode();
+        if ($code === 200) {
+            $token = json_decode($response->getBody()->__toString(), false)->token;
             if ($decoded = JWT::decodeToken($token)) {
-                $user_token = new UserToken(
+                // Save token to database
+                (new UserToken(
                     [
                         'user_id' => $decoded->id,
                         'token' => $token,
                         'valid_till' => date('Y-m-d H:i:s', $decoded->exp),
                         'ip' => $this->request->getAttribute('ip_address'),
                     ]
-                );
-                $user_token->save();
+                ))->save();
 
                 // Limit active tokens
-                $max = getenv('JWT_MAX');
-                if ($max && UserToken::query()->where(['user_id' => $decoded->id, 'active' => true])->count() > $max) {
-                    UserToken::query()
-                        ->where(['user_id' => $decoded->id, 'active' => true])
-                        ->orderBy('updated_at', 'asc')
-                        ->orderBy('created_at', 'asc')
-                        ->first()
-                        ->update(['active' => false]);
+                if ($max = getenv('JWT_MAX')) {
+                    $query = UserToken::query()->where(['user_id' => $decoded->id, 'active' => true]);
+                    if ($query->count() > $max) {
+                        if ($result = $query->orderBy('updated_at')->orderBy('created_at')->first()) {
+                            $result->update(['active' => false]);
+                        }
+                    }
                 }
+            }
+        } else {
+            if ($code === 403) {
+                return $this->failure('errors.security.inactive');
+            }
+            if ($code === 422) {
+                return $this->failure('errors.security.wrong');
             }
         }
 
         return $response;
     }
+
 }

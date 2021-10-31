@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controllers\Security;
 
 use App\Models\UserToken;
@@ -12,10 +10,7 @@ class Logout extends Controller
 {
     protected $scope = 'profile';
 
-    /**
-     * @return ResponseInterface
-     */
-    public function post()
+    public function post(): ResponseInterface
     {
         /** @var UserToken $token */
         $user_token = $token = UserToken::query()
@@ -28,5 +23,4 @@ class Logout extends Controller
 
         return $this->success();
     }
-
 }
