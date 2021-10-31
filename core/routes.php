@@ -19,6 +19,12 @@ $group = $app->group(
                 $group->any('/user-roles[/{id}]', App\Controllers\Admin\UserRoles::class);
             }
         );
+        $group->group(
+            '/web',
+            static function (RouteCollectorProxy $group) {
+                $group->any('/telegram-hook[/{id}]', App\Controllers\Web\TelegramHook::class);
+            }
+        );
     }
 );
 
