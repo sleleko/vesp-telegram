@@ -22,7 +22,8 @@ $group = $app->group(
         $group->group(
             '/web',
             static function (RouteCollectorProxy $group) {
-                $group->post('/telegram-hook[/{id}]', App\Controllers\Web\TelegramHook::class);
+                $group->get('/test', App\Controllers\Web\Test::class);
+                $group->post('/webhook', App\Controllers\Web\Webhook::class);
             }
         );
     }
