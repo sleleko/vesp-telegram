@@ -17,10 +17,12 @@
     "ext-json": "*",
     "akrabat/ip-address-middleware": "^1.0",
     "peppeocchi/php-cron-scheduler": "^3.1",
-    "vesp/core": "^2.3.0",
+    "vesp/core": "^2.6.0",
     "longman/telegram-bot": "*"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest"
+    ,
     "itsgoingd/clockwork": "^4.1"
   },
   "config": {
