@@ -15,11 +15,11 @@
   },
   "require": {
     "ext-json": "*",
-    "akrabat/ip-address-middleware": "^1.0",
+    "akrabat/ip-address-middleware": "^2.1",
+    "peppeocchi/php-cron-scheduler": "^4.0",
+    "vesp/core": "^2.7.2"
     "longman/telegram-bot": "*",
     "monolog/monolog": "^2.8",
-    "peppeocchi/php-cron-scheduler": "^3.1",
-    "vesp/core": "^2.6.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
@@ -48,4 +48,3 @@
       "@composer node:install"
     ]
   }
-}
