@@ -22,11 +22,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openssh-client rsync
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOYMENT_KEY }}" > private_key
-          chmod 600 private_key
+          echo "${{ secrets.DEPLOYMENT_KEY }}" > id_rsa
+          chmod 600 id_rsa
           ssh-keyscan -t rsa ${{ secrets.DEPLOYMENT_HOST }} > ~/.ssh/known_hosts
           eval $(ssh-agent -s)
-          ssh-add private_key
+          ssh-add id_rsa
           cp .env.dist .env
           cd frontend
           yarn install
