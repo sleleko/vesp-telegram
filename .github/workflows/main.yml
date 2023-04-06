@@ -22,11 +22,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openssh-client rsync
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOYMENT_KEY }}" > id_rsa
-          chmod 600 id_rsa
+          echo "${{ secrets.DEPLOYMENT_KEY }}" > private_key
+          chmod 600 private_key
           ssh-keyscan -t rsa ${{ secrets.DEPLOYMENT_HOST }} > ~/.ssh/known_hosts
           eval $(ssh-agent -s)
-          ssh-add id_rsa
+          ssh-add private_key
           cp .env.dist .env
           cd frontend
           yarn install
@@ -43,12 +43,12 @@ jobs:
           CORE_PATH: ${{ secrets.CORE_PATH }}
           BASE_PATH: ${{ secrets.BASE_PATH }}
         run: |
-          ssh -vvv -o "BatchMode=yes" $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $WWW_PATH"
-          rsync -r --del --force --exclude 'node_modules' --stats frontend/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$FRONTEND_PATH
-          rsync -r --del --force www/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$WWW_PATH
-          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $CORE_PATH"
-          rsync -r --del --force --exclude 'vendor' --stats core/* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$CORE_PATH
-          rsync -r --del --force composer.* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$BASE_PATH
-          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && ~/bin/php ~/bin/composer install --no-dev"
-          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $CORE_PATH && ~/bin/php ./vendor/bin/phinx migrate"
-          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && ~/bin/yarn --ignore-engines && ~/bin/yarn restart"
+          ssh -vvv -o "BatchMode=yes" -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $WWW_PATH"
+          rsync -r --del --force --exclude 'node_modules' --stats -e "ssh -i private_key" frontend/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$FRONTEND_PATH
+          rsync -r --del --force -e "ssh -i private_key" www/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$WWW_PATH
+          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $CORE_PATH"
+          rsync -r --del --force --exclude 'vendor' --stats -e "ssh -i private_key" core/* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$CORE_PATH
+          rsync -r --del --force -e "ssh -i private_key" composer.* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$BASE_PATH
+          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && ~/bin/php ~/bin/composer install --no-dev"
+          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $CORE_PATH && ~/bin/php ./vendor/bin/phinx migrate"
+          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && ~/bin/yarn --ignore-engines && ~/bin/yarn restart"
