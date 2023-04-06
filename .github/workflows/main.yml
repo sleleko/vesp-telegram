@@ -29,7 +29,6 @@ jobs:
           ssh-add private_key
           cp .env.dist .env
           cd frontend
-          export NODE_OPTIONS=--openssl-legacy-provider
           yarn install
           yarn generate:admin
           yarn build:site
