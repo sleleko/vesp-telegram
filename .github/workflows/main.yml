@@ -1,0 +1,55 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client rsync
+          mkdir -p ~/.ssh
+          echo "$DEPLOYMENT_KEY" > private_key
+          chmod 600 private_key
+          ssh-keyscan -t rsa ${{ secrets.DEPLOYMENT_HOST }} > ~/.ssh/known_hosts
+          eval $(ssh-agent -s)
+          ssh-add private_key
+          cp .env.dist .env
+          cd frontend
+          export NODE_OPTIONS=--openssl-legacy-provider
+          yarn install
+          yarn generate:admin
+          yarn build:site
+          cd ..
+
+      - name: Deploy to server
+        env:
+          DEPLOYMENT_USER: ${{ secrets.DEPLOYMENT_USER }}
+          DEPLOYMENT_HOST: ${{ secrets.DEPLOYMENT_HOST }}
+          FRONTEND_PATH: ${{ secrets.FRONTEND_PATH }}
+          WWW_PATH: ${{ secrets.WWW_PATH }}
+          CORE_PATH: ${{ secrets.CORE_PATH }}
+          BASE_PATH: ${{ secrets.BASE_PATH }}
+        run: |
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $WWW_PATH"
+          rsync -r --del --force --exclude 'node_modules' --stats frontend/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$FRONTEND_PATH
+          rsync -r --del --force www/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$WWW_PATH
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $CORE_PATH"
+          rsync -r --del --force --exclude 'vendor' --stats core/* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$CORE_PATH
+          rsync -r --del --force composer.* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$BASE_PATH
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && ~/bin/php ~/bin/composer install --no-dev"
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $CORE_PATH && ~/bin/php ./vendor/bin/phinx migrate"
+          ssh $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && ~/bin/yarn --ignore-engines && ~/bin/yarn restart"
