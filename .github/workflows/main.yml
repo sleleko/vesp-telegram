@@ -55,4 +55,4 @@ jobs:
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && /usr/bin/php /usr/local/bin/composer update"
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && /usr/bin/php /usr/local/bin/composer install --no-dev"
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $CORE_PATH && /usr/bin/php ./vendor/bin/phinx migrate"
-          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && /root/.nvm/versions/node/v15.5.1/bin/yarn --ignore-engines && ~/bin/yarn restart"
+          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && /root/.nvm/versions/node/v15.5.1/bin/yarn --ignore-engines && /root/.nvm/versions/node/v15.5.1/bin/yarn restart"
