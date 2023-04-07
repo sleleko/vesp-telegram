@@ -53,4 +53,4 @@ jobs:
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && /usr/bin/php /usr/local/bin/composer install --no-dev"
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $CORE_PATH && /usr/bin/php ./vendor/bin/phinx migrate"
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "npm install pm2@latest -g"
-          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && /root/.nvm/versions/node/v16.20.0/bin/yarn --ignore-engines && /root/.nvm/versions/node/v16.20.0/bin/yarn restart"
+          ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $FRONTEND_PATH && /root/.nvm/versions/node/v16.20.0/bin/yarn --ignore-engines && /root/.nvm/versions/node/v16.20.0/bin/pm2 startOrRestart ecosystem.config.js"
