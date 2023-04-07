@@ -20,6 +20,10 @@ class StartCommand extends UserCommand
             'На данный момент бот отвечает раз в минуту. Используй /help, чтобы увидеть все доступные команды.',
         ];
 
-        return $this->replyToChat(implode(PHP_EOL . PHP_EOL, $data));
+//        return $this->replyToChat(implode(PHP_EOL . PHP_EOL, $data));
+        return [
+            'text' => 'Выберите бренд',
+            'reply_markup' => new InlineKeyboard(...$this->prepareKeyboard($rows)),
+        ];
     }
 }
