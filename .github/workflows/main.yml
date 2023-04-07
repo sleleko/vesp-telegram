@@ -44,11 +44,11 @@ jobs:
           BASE_PATH: ${{ secrets.BASE_PATH }}
         run: |
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $WWW_PATH"
-          rsync -r --ignore-missing-args --del --force --exclude 'node_modules' --stats -e "ssh -i private_key" frontend/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$FRONTEND_PATH
-          rsync -r --ignore-missing-args --del --force -e "ssh -i private_key" www/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$WWW_PATH
+          rsync -r --ignore-missing-args --delete --force --exclude 'node_modules' --stats -e "ssh -i private_key" frontend/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$FRONTEND_PATH
+          rsync -r --ignore-missing-args --delete --force -e "ssh -i private_key" www/ $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$WWW_PATH
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "mkdir -p $CORE_PATH"
-          rsync -r --ignore-missing-args --del --force --exclude 'vendor' --stats -e "ssh -i private_key" core/* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$CORE_PATH
-          rsync -r --ignore-missing-args --del --force -e "ssh -i private_key" composer.* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$BASE_PATH
+          rsync -r --ignore-missing-args --delete --force --exclude 'vendor' --stats -e "ssh -i private_key" core/* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$CORE_PATH
+          rsync -r --ignore-missing-args --delete --force -e "ssh -i private_key" composer.* $DEPLOYMENT_USER@$DEPLOYMENT_HOST:$BASE_PATH
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && /usr/bin/php /usr/local/bin/composer update"
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $BASE_PATH && /usr/bin/php /usr/local/bin/composer install --no-dev"
           ssh -i private_key $DEPLOYMENT_USER@$DEPLOYMENT_HOST "cd $CORE_PATH && /usr/bin/php ./vendor/bin/phinx migrate"
