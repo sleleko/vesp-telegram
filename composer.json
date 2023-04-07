@@ -18,11 +18,10 @@
     "akrabat/ip-address-middleware": "^2.1",
     "peppeocchi/php-cron-scheduler": "^4.0",
     "vesp/core": "^2.7.2",
-    "longman/telegram-bot": "^0.81",
+    "longman/telegram-bot": "^0.80.0",
     "monolog/monolog": "^2.8"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
     "itsgoingd/clockwork": "^4.1"
   },
   "config": {
